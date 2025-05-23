@@ -18,8 +18,9 @@ struct Vec3 {
 
 struct Point {
     Vec3 position;
-    // Add any data here, like mass or id
-    Point(const Vec3& pos) : position(pos) {}
+    double mass;
+
+    Point(const Vec3& pos, double mass = 1.0) : position(pos), mass(mass) {}
 };
 
 class OctreeNode {
@@ -28,8 +29,9 @@ public:
     double halfSize;
     std::vector<Point> points;
     std::unique_ptr<OctreeNode> children[8];
+    double totalMass = 0.0;
 
-    static constexpr int MAX_POINTS = 1;
+    static constexpr int MAX_POINTS = 8;
 
     OctreeNode(const Vec3& center, double halfSize)
         : center(center), halfSize(halfSize) {}
@@ -48,9 +50,13 @@ public:
         } else {
             if (!children[0]) subdivide();
             for (auto& child : children) {
-                child->insert(p);
+                if (child->contains(p.position)) {
+                    child->insert(p);
+                    break;
+                }
             }
         }
+
     }
 
     void subdivide() {
@@ -63,7 +69,7 @@ public:
             children[i] = std::make_unique<OctreeNode>(newCenter, quarter);
         }
 
-        // Reinsert existing points into children
+        // Reinsertar puntos en los hijos
         for (const auto& p : points) {
             for (auto& child : children) {
                 if (child->contains(p.position)) {
@@ -72,23 +78,35 @@ public:
                 }
             }
         }
-        points.clear(); // clear local points after pushing to children
+        points.clear(); // Limpiar puntos del nodo actual
     }
 
-
-    
+    void NodeMass() {
+        totalMass = 0.0;
+        if (children[0]) {
+            for (const auto& child : children) {
+                if (child) {
+                    child->NodeMass();
+                    totalMass += child->totalMass;
+                }
+            }
+        } else {
+            // Sumar la masa real de los puntos del nodo hoja
+            for (const auto& p : points) {
+                totalMass += p.mass;
+            }
+        }
+    }
 
     void printTree(int depth = 0) const {
-        // Indentación visual
         std::string indent(depth * 2, ' ');
 
-        // Mostrar información del nodo actual
         std::cout << indent << "Nodo (Centro: " 
                 << center.x << ", " << center.y << ", " << center.z 
                 << ", halfSize: " << halfSize << ")"
-                << " con " << points.size() << " puntos" << std::endl;
+                << " con " << points.size() << " puntos"
+                << ", masa total: " << totalMass << std::endl;
 
-        // Recorrer hijos si existen
         for (int i = 0; i < 8; ++i) {
             if (children[i]) {
                 std::cout << indent << "|____ Hijo " << i << ":" << std::endl;
@@ -99,13 +117,21 @@ public:
 };
 
 
-
 int main() {
-    OctreeNode root({0, 0, 0}, 2.0);
-    root.insert(Point({0.5, 0.5, 0.5}));
-    root.insert(Point({0.6, 0.6, 0.6}));
+    OctreeNode root({0, 0, 0}, 4.0);
+    root.insert(Point({0.5, 0.5, 0.5}, 1.0));
+    root.insert(Point({0.6, 0.6, 0.6}, 2.0));
+    root.insert(Point({-0.3, -0.4, 0.1}, 3.5));
+    root.insert(Point({1.5, 1.5, 1.5}, 4.0));
+    root.insert(Point({-1.5, -1.5, -1.5}, 5.0));
+    root.insert(Point({0.1, 0.1, 0.1}, 6.0));
+    root.insert(Point({-3.5, -0.5, -0.5}, 7.0));
+    root.insert(Point({2.5, 2.5, 2.5}, 8.0));
+    root.insert(Point({-2.5, -2.5, -2.5}, 9.0));
+    root.insert(Point({0.2, 0.2, 0.2}, 10.0));
     
+    root.NodeMass();  // <--- Importante calcular la masa después de insertar
     root.printTree();
-    
+
     return 0;
 }
