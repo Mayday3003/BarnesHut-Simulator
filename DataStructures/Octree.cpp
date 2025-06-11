@@ -95,18 +95,18 @@ void calculate_force(const OctreeNode* node, Particle& particle, double theta) {
     if (!node || node->totalMass == 0) return;
 
     Vec3 diff = {
-        node->center.x - particle.x,
-        node->center.y - particle.y,
-        node->center.z - particle.z
+        node->center.x - particle.pos.x,
+        node->center.y - particle.pos.y,
+        node->center.z - particle.pos.z
     };
     double distance = sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
 
     // Si el nodo es una hoja o cumple el criterio de apertura
     if (node->halfSize / distance < theta || !node->children[0]) {
         double force = (node->totalMass) / (distance * distance * distance + 1e-9); // Evitar división por cero
-        particle.ax += force * diff.x;
-        particle.ay += force * diff.y;
-        particle.az += force * diff.z;
+        particle.acc.x += force * diff.x;
+        particle.acc.y += force * diff.y;
+        particle.acc.z += force * diff.z;
     } else {
         // Recorrer los hijos
         for (const auto& child : node->children) {

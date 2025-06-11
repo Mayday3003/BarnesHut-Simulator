@@ -13,7 +13,8 @@ SOURCES = \
     Physics/Leapfrog.c \
     Utilities/Config.c \
     Utilities/Logger.c \
-    Preprocessing/data_generator.c
+    Preprocessing/data_generator.c \
+    DataStructures/Vector3d.cpp
 
 OBJECTS = $(patsubst %.c,$(OBJDIR)/%.o,$(filter %.c,$(SOURCES))) \
           $(patsubst %.cpp,$(OBJDIR)/%.o,$(filter %.cpp,$(SOURCES)))
