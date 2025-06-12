@@ -10,11 +10,12 @@ int main(int argc, char **argv) {
     // Simulation parameters
     int n ;                // Number of particles
     double dt = 0.01;            // Time step
-    int n_steps = 100;           // Number of steps
+    int n_steps;           // Number of steps
     double theta = 0.5;          // Barnes-Hut opening angle
     char distribution[20];       // Buffer for initial distribution type
 
-    // Prompt user for initial distribution type
+
+
     printf("Select initial distribution (uniform/gaussian/plummer): ");
     if (scanf("%19s", distribution) != 1) {
         fprintf(stderr, "Error: Invalid input.\n");
@@ -26,6 +27,14 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Error: Invalid number of particles.\n");
         return EXIT_FAILURE;
     }
+
+    printf("Enter number of steps (n_steps): ");
+    if (scanf("%d", &n_steps) != 1 || n_steps <= 0) {
+        fprintf(stderr, "Error: Invalid number of steps.\n");
+        return EXIT_FAILURE;
+    }
+
+
 
 
     // Allocate memory for particles
@@ -48,11 +57,11 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    int start_time = omp_get_wtime();  
+    double start_time = omp_get_wtime();  
     simulate(particles, n, dt, n_steps, theta);
-    int end_time = omp_get_wtime();    
+    double end_time = omp_get_wtime();    
 
-    printf("Simulation completed in %d seconds.\n", end_time - start_time);
+    printf("Simulation completed in %.3f seconds.\n", end_time - start_time);
 
     free(particles);
     return EXIT_SUCCESS;
