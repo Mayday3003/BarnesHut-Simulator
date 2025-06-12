@@ -9,12 +9,12 @@ OBJDIR = build
 SOURCES = \
     main.c \
     Physics/Nbody.cpp \
-    Physics/leapfrog_integrator.c \
     Physics/Leapfrog.c \
     Utilities/Config.c \
     Utilities/Logger.c \
     Preprocessing/data_generator.c \
-    DataStructures/Vector3d.cpp
+    DataStructures/Vector3d.cpp \
+    DataStructures/Octree.cpp
 
 OBJECTS = $(patsubst %.c,$(OBJDIR)/%.o,$(filter %.c,$(SOURCES))) \
           $(patsubst %.cpp,$(OBJDIR)/%.o,$(filter %.cpp,$(SOURCES)))
@@ -30,7 +30,8 @@ $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 simulator: $(OBJECTS)
+	@mkdir -p datos/posiciones
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -rf $(OBJDIR) simulator
+	rm -rf $(OBJDIR) simulator datos/posiciones

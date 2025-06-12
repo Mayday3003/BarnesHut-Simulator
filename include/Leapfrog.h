@@ -3,7 +3,16 @@
 
 #include "Particle.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Actualiza posiciones y velocidades usando integrador Leapfrog
-void leapfrog_step(Particle *particles, int count, double dt);
+void leapfrog_drift(Particle *particles, int count, double dt);
+void leapfrog_kick_drift(Particle *particles, int count, double dt);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LEAPFROG_H

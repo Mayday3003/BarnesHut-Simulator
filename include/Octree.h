@@ -6,27 +6,11 @@
 #include <memory>
 #include <atomic>
 
-struct Vec3 {
-    double x, y, z;
-
-    Vec3(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
-
-    bool operator<=(const Vec3& other) const;
-    bool operator>=(const Vec3& other) const;
-};
-
-struct Point {
-    Vec3 position;
-    double mass;
-
-    Point(const Vec3& pos, double mass = 1.0);
-};
-
 class OctreeNode {
 public:
-    Vec3 center;
+    Vector3 center; // Cambiar Vec3 por Vector3
     double halfSize;
-    std::vector<Point> points;
+    std::vector<Particle> particles;
     std::unique_ptr<OctreeNode> children[8];
     double totalMass = 0.0;
     int id = -1;
@@ -34,10 +18,10 @@ public:
     static constexpr int MAX_POINTS = 8;
     static std::atomic<int> id_counter;
 
-    OctreeNode(const Vec3& center, double halfSize);
+    OctreeNode(const Vector3& center, double halfSize);
 
-    bool contains(const Vec3& point) const;
-    void insert(const Point& p);
+    bool contains(const Vector3& point) const;
+    void insert(const Particle& particle);
     void subdivide();
     void NodeMass();
     void printTree(int depth = 0) const;
