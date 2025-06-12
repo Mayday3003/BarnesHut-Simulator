@@ -6,26 +6,28 @@
 #include "include/data_generator.h"
 
 int main(int argc, char **argv) {
-    int n = 1000;                // Número de partículas
-    double dt = 0.01;            // Paso de tiempo
-    int n_steps = 100;           // Número de pasos
-    double theta = 0.5;          // Umbral de apertura para Barnes-Hut
-    char distribution[20];       // Buffer para la distribución
+    // Simulation parameters
+    int n = 1000;                // Number of particles
+    double dt = 0.01;            // Time step
+    int n_steps = 100;           // Number of steps
+    double theta = 0.5;          // Barnes-Hut opening angle
+    char distribution[20];       // Buffer for initial distribution type
 
-    printf("Seleccione la distribución inicial (uniform/gaussian/plummer): ");
+    // Prompt user for initial distribution type
+    printf("Select initial distribution (uniform/gaussian/plummer): ");
     if (scanf("%19s", distribution) != 1) {
-        fprintf(stderr, "Error: Entrada inválida.\n");
+        fprintf(stderr, "Error: Invalid input.\n");
         return EXIT_FAILURE;
     }
 
-    // Asignar arreglo de partículas usando `malloc`
+    // Allocate memory for particles
     Particle *particles = (Particle *)malloc(n * sizeof(Particle));
     if (particles == NULL) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para las partículas.\n");
+        fprintf(stderr, "Error: Failed to allocate memory for particles.\n");
         return EXIT_FAILURE;
     }
 
-    // Generar distribución inicial según selección
+    // Generate initial particle distribution
     if (strcmp(distribution, "uniform") == 0) {
         generate_uniform_distribution(particles, n);
     } else if (strcmp(distribution, "gaussian") == 0) {
@@ -33,16 +35,16 @@ int main(int argc, char **argv) {
     } else if (strcmp(distribution, "plummer") == 0) {
         generate_plummer_distribution(particles, n);
     } else {
-        fprintf(stderr, "Error: Distribución no válida.\n");
-        free(particles);  // Liberar memoria con `free`
+        fprintf(stderr, "Error: Invalid distribution type.\n");
+        free(particles);  // Free allocated memory
         return EXIT_FAILURE;
     }
 
-    // Ejecutar simulación con Barnes-Hut
+    // Run Barnes-Hut simulation
     simulate(particles, n, dt, n_steps, theta);
 
-    // Liberar memoria y terminar
-    free(particles);  // Liberar memoria con `free`
+    // Free allocated memory and exit
+    free(particles);
     return EXIT_SUCCESS;
 }
 

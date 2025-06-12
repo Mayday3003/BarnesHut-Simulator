@@ -7,7 +7,6 @@
 extern "C" {
 #endif
 
-// Actualiza posiciones y velocidades usando integrador Leapfrog
 void leapfrog_drift(Particle *particles, int count, double dt);
 void leapfrog_kick_drift(Particle *particles, int count, double dt);
 
@@ -15,4 +14,4 @@ void leapfrog_kick_drift(Particle *particles, int count, double dt);
 }
 #endif
 
-#endif // LEAPFROG_H
+#endif

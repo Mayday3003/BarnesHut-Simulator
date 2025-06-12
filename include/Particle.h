@@ -6,10 +6,10 @@ typedef struct {
 } Vector3;
 
 typedef struct {
-    Vector3 pos;  // Posición
-    Vector3 vel;  // Velocidad
-    Vector3 acc;  // Aceleración
-    double mass;  // Masa
+    Vector3 pos;  // Position
+    Vector3 vel;  // Velocity
+    Vector3 acc;  // Acceleration
+    double mass;  // Mass
 } Particle;
 
-#endif // PARTICLE_H
+#endif 
