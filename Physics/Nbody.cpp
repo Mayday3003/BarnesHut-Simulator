@@ -56,7 +56,7 @@ void save_positions(const Particle* particles, int n, int step) {
 void simulate(Particle* particles, int n, double dt, int steps, double theta) {
     for (int s = 0; s < steps; s++) {
         OctreeNode root({0, 0, 0}, 100.0);
-
+         // No hay paralelizmo por condiciones de carrera   :( (Maten las condiciones de carrera))
         for (int i = 0; i < n; i++) {
             root.insert(particles[i]);
         }

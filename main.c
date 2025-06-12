@@ -4,6 +4,7 @@
 #include "include/Particle.h"
 #include "include/Nbody.h"
 #include "include/data_generator.h"
+#include <omp.h>
 
 int main(int argc, char **argv) {
     // Simulation parameters
@@ -47,10 +48,12 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    // Run Barnes-Hut simulation
+    int start_time = omp_get_wtime();  
     simulate(particles, n, dt, n_steps, theta);
+    int end_time = omp_get_wtime();    
 
-    // Free allocated memory and exit
+    printf("Simulation completed in %d seconds.\n", end_time - start_time);
+
     free(particles);
     return EXIT_SUCCESS;
 }
