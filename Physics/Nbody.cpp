@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <omp.h>
 #include "../include/Nbody.h"
 #include "../include/Particle.h"
 #include "../include/Leapfrog.h"
@@ -55,11 +56,14 @@ void save_positions(const Particle* particles, int n, int step) {
 void simulate(Particle* particles, int n, double dt, int steps, double theta) {
     for (int s = 0; s < steps; s++) {
         OctreeNode root({0, 0, 0}, 100.0);
+
         for (int i = 0; i < n; i++) {
             root.insert(particles[i]);
         }
+
         root.NodeMass();
 
+        #pragma omp parallel for schedule(guided)
         for (int i = 0; i < n; i++) {
             particles[i].acc = {0, 0, 0};
             calculate_force(&root, particles[i], theta);

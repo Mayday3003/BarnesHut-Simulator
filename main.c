@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv) {
     // Simulation parameters
-    int n = 1000;                // Number of particles
+    int n ;                // Number of particles
     double dt = 0.01;            // Time step
     int n_steps = 100;           // Number of steps
     double theta = 0.5;          // Barnes-Hut opening angle
@@ -19,6 +19,13 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Error: Invalid input.\n");
         return EXIT_FAILURE;
     }
+
+    printf("Enter number of particles (n): ");
+    if (scanf("%d", &n) != 1 || n <= 0) {
+        fprintf(stderr, "Error: Invalid number of particles.\n");
+        return EXIT_FAILURE;
+    }
+
 
     // Allocate memory for particles
     Particle *particles = (Particle *)malloc(n * sizeof(Particle));
