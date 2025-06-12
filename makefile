@@ -23,7 +23,7 @@ all: simulator
 
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CFLAGS) -c $< -o $@  # Cambiar a g++ para compatibilidad con C++
 
 $(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)

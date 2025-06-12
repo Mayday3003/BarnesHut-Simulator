@@ -18,8 +18,8 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    // Asignar arreglo de partículas usando `new`
-    Particle *particles = new Particle[n];
+    // Asignar arreglo de partículas usando `malloc`
+    Particle *particles = (Particle *)malloc(n * sizeof(Particle));
     if (particles == NULL) {
         fprintf(stderr, "Error: No se pudo asignar memoria para las partículas.\n");
         return EXIT_FAILURE;
@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
         generate_plummer_distribution(particles, n);
     } else {
         fprintf(stderr, "Error: Distribución no válida.\n");
-        delete[] particles;  // Liberar memoria con `delete[]`
+        free(particles);  // Liberar memoria con `free`
         return EXIT_FAILURE;
     }
 
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     simulate(particles, n, dt, n_steps, theta);
 
     // Liberar memoria y terminar
-    delete[] particles;  // Liberar memoria con `delete[]`
+    free(particles);  // Liberar memoria con `free`
     return EXIT_SUCCESS;
 }
 
